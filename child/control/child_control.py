@@ -23,6 +23,7 @@ from childlink import proto as cp  # noqa: E402
 from motorlink import LinkError, MotorLink, proto  # noqa: E402
 
 STATUS_PERIOD_S = 0.05  # 20Hz
+ESP_LOST_EXIT_S = 2.0   # ESP32 との通信がこれだけ途絶えたら終了する（systemd が再起動してつなぎ直す）
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,6 +64,8 @@ def main(argv: list[str] | None = None) -> int:
     parent_addr = None
     next_status = time.monotonic()
     t0 = time.monotonic()
+    last_esp_ok = t0
+    rc = 0
     try:
         while True:
             r, _, _ = select.select([sock], [], [], 0.01)
@@ -76,6 +79,12 @@ def main(argv: list[str] | None = None) -> int:
                 except BlockingIOError:
                     pass
             ctrl.tick(now)
+            if link.connected:
+                last_esp_ok = now
+            elif now - last_esp_ok > ESP_LOST_EXIT_S:
+                print("ESP32 との通信が途絶えたため終了します", file=sys.stderr, flush=True)
+                rc = 1
+                break
             if parent_addr and now >= next_status:
                 next_status = now + STATUS_PERIOD_S
                 seq += 1
@@ -89,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         link.close()  # 停止を伝えてから閉じる
         sock.close()
-    return 0
+    return rc
 
 
 if __name__ == "__main__":

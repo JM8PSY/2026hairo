@@ -29,9 +29,9 @@ def wait_for(cond, timeout=1.5):
 class ChildE2ETest(unittest.TestCase):
     def setUp(self):
         self.procs = []
-        sim = self._spawn([str(SIM), "child"], stdin=subprocess.PIPE)
+        self.sim = sim = self._spawn([str(SIM), "child"], stdin=subprocess.PIPE)
         serial = sim.stdout.readline().strip()
-        child = self._spawn([sys.executable, str(CHILD), "--serial", serial,
+        self.child = child = self._spawn([sys.executable, str(CHILD), "--serial", serial,
                              "--bind", "127.0.0.1", "--port", "0"])
         port = None
         for _ in range(2):
@@ -117,6 +117,12 @@ class ChildE2ETest(unittest.TestCase):
         self.client.request_clear()
         self.assertTrue(wait_for(lambda: self.st().esp_state == State.DISARMED))
         self.arm()
+
+    def test_child_exits_when_esp32_lost(self):
+        # USB が抜けた等。終了して systemd に再起動（再接続）させる
+        self.arm()
+        self.sim.kill()
+        self.assertEqual(self.child.wait(timeout=5), 1)
 
 
 if __name__ == "__main__":
