@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # 実機なしで回すテスト。Mac と Jetson の両方で通ること。
 .PHONY: test test-fw test-py test-web test-docker test-setup clean
 

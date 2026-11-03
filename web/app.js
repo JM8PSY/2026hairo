@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // 操縦 Web UI。docs/protocol_web.md の WebSocket プロトコルで親機と話す。
 // 安全（CLAUDE.md §5）：操縦者は 50Hz で cmd を送り続ける。タブ非表示・フォーカス喪失・
 // ゲームパッド切断のときは ok=false を送り、サーバーが全機停止する。再開は ARM ボタンから。

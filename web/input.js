@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // 入力（ゲームパッド・キーボード）→ 軸の値（-1〜1）への変換。DOM に依存しない（node --test で検査する）。
 
 export const PARENT_AXES = ["left", "right", "sub_front", "sub_rear", "lid", "reel"];

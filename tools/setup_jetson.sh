@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # 親機 Jetson（JetPack 7 / Ubuntu 24.04）の開発環境を構築する。
 # 使い方（clone したリポジトリ直下で）: sudo ./tools/setup_jetson.sh [--no-ros] [--no-pio]
 # 何度実行しても同じ結果になるように書く（済んでいる手順は飛ばす）。

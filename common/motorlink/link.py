@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """ESP32 とシリアルで話すホスト側ライブラリ（CLAUDE.md §4）。標準ライブラリのみ。
 
 - 約50Hzで CMD_SET を送り続ける（ESP32 のウォッチドッグ 200ms を切らさない）。

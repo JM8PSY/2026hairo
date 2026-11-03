@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """子機の制御プロセス：親機からの UDP 指令を受けて ESP32 へ送り、状態を親機へ返す。
 
   child/control/child_control.py [--config child/config/child.json] [--serial PATH] [--port N]

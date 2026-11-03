@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // 親機/子機ごとのピン・モーター割当・出力制限（CLAUDE.md §4）。
 // docs/wiring_motor_esp32.md と必ず一致させること。
 // ビルド時に BOARD_PARENT か BOARD_CHILD を定義する（platformio.ini の env で切替）。

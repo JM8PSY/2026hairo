@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // ESP32 シミュレータ：仮想シリアル（pty）上で motor_core を動かし、実機の ESP32 のふりをする。
 // 使い方: ./motor_sim parent|child [--link PATH]
 //   起動すると pty のパスを1行目に表示する（--link を付けるとそのパスにシンボリックリンクを張る）。

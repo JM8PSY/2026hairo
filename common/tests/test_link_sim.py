@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """ESP32 シミュレータ（firmware/motor_esp32/test_host/build/motor_sim）を相手にした結合テスト。
 C++ 側と Python 側のプロトコル実装が噛み合っていることもここで確かめる。"""
 import os

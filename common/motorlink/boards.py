@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """基板ごとのモーター名（firmware/motor_esp32/include/board_config.h と同じ並び）。"""
 from . import proto
 

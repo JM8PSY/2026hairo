@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // ホスト ⇔ ESP32 通信プロトコル（CLAUDE.md §4）。Arduino 非依存。
 // Python 側 common/motorlink/proto.py と必ず同時に変更すること。
 //

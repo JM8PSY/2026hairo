@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """操縦ロジック（CLAUDE.md §5, §6）。aiohttp・ROS に依存しない。
 
 ブラウザからのメッセージ（dict）を受け、50Hz の tick() で親機・子機のバックエンドへ指令を出す。

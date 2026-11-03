@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // プロトコルと motor_core のホストPC用単体テスト。`make test` で実行する。
 #include <cstdio>
 #include <cstring>

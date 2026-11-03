@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // モーター出力の状態遷移・ウォッチドッグ・出力制限（CLAUDE.md §4）。Arduino 非依存。
 // 時刻はすべて呼び出し側が渡す（ミリ秒）。ホストPCの単体テストとシミュレータで同じコードを使う。
 #pragma once

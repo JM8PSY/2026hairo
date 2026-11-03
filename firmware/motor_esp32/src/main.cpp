@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // モーター駆動 ESP32：シリアル受信 → motor_core → PCA9685 → MD20A（CLAUDE.md §4）
 // 状態遷移・制限は lib/motor_core（ホストでテスト済み）に任せ、ここはハードウェアの入出力だけ。
 #include <Arduino.h>

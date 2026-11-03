@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """子機側：親機からの DRIVE を受けて motorlink を操作する（ソケットを持たない純粋なロジック）。
 
 安全上の決まり（CLAUDE.md §5）：

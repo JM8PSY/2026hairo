@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """Web サーバーの結合テスト（ESP32 シミュレータ相手）。aiohttp が無い環境ではスキップ。
 Mac では入っていないので `make test-docker`（Ubuntu 24.04 コンテナ）で回す。"""
 import asyncio

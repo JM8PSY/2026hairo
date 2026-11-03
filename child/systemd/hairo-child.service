@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # 子機の制御プロセス。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
 [Unit]
 Description=Hairo robot child control (UDP from parent -> ESP32)

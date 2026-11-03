@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # systemd ユニットを入れる（有効化はしない。自動起動したいときは表示されるコマンドを実行する）
 # 使い方: sudo ./tools/install_services.sh parent|child
 set -euo pipefail

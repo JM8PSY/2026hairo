@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """モーター単体確認ツール（実機の最初の通電用）。
 
   # 状態を表示するだけ（モーターは回さない）

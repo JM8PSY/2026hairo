@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """親機 Web サーバー：Web UI の配信と、ブラウザ ⇔ 親機・子機 の仲介（CLAUDE.md §6）。
 
   parent/server/app.py [--config parent/config/parent.json] [--serial PATH] [--child HOST:PORT]

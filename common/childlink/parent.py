@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """親機側：子機へ DRIVE を約50Hzで送り続け、子機の STATUS からリンク品質を測る。
 
 ソケットの送受信は呼び出し側のループ（または run_forever）から step() / on_packet() を呼ぶ。

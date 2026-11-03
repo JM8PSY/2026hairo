@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # 親機のシリアルデバイス名を固定する（CLAUDE.md §4, §7）
 # ESP32-DevKit と YD-LiDAR X4 Pro はどちらも USB-シリアル変換に CP210x を使うことがあり、
 # VID/PID だけでは区別できない。必ずシリアル番号で識別すること。
