@@ -1,5 +1,73 @@
 <!doctype html>
 <html lang="ja">
-<head><meta charset="utf-8"><title>廃炉ロボ 操縦</title></head>
-<body><p>Web UI は準備中です。</p></body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>廃炉ロボ 操縦</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>廃炉ロボ 操縦</h1>
+    <span id="conn" class="pill bad">未接続</span>
+    <span id="role" class="pill">閲覧</span>
+    <span id="input" class="pill">入力：—</span>
+    <button id="estop" class="estop" title="非常停止（Space / ゲームパッド Back）">非常停止</button>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <main>
+    <section class="panel controls">
+      <h2>操作</h2>
+      <div class="row">
+        <button id="take">操縦権を取る</button>
+        <button id="release">操縦権を返す</button>
+      </div>
+      <div class="row">
+        <button id="arm" class="go">ARM（動作開始）</button>
+        <button id="disarm">停止（DISARM）</button>
+        <button id="clear">非常停止の解除</button>
+      </div>
+      <div class="row target">
+        <span>操作対象</span>
+        <button id="t-parent" class="seg on">親機</button>
+        <button id="t-child" class="seg">子機</button>
+        <small>（Tab / Start で切替）</small>
+      </div>
+      <div id="lid-hold" class="lid-hold" hidden>
+        ふたを閉じる：長押し中 <span class="bar"><span id="lid-hold-bar"></span></span>
+      </div>
+      <dl class="kv">
+        <dt>状態</dt><dd id="core-state">—</dd>
+        <dt>停止理由</dt><dd id="stop-reason">—</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>親機 <span id="p-conn" class="pill bad">—</span></h2>
+      <dl class="kv">
+        <dt>ESP32</dt><dd id="p-state">—</dd>
+        <dt>ふた</dt><dd id="p-lid">—</dd>
+      </dl>
+      <div id="p-outs" class="outs"></div>
+    </section>
+
+    <section class="panel">
+      <h2>子機 <span id="c-conn" class="pill bad">—</span></h2>
+      <dl class="kv">
+        <dt>ESP32</dt><dd id="c-state">—</dd>
+        <dt>Wi-Fi</dt><dd id="c-link">—</dd>
+      </dl>
+      <div id="c-outs" class="outs"></div>
+    </section>
+
+    <section class="panel keymap">
+      <h2>キー割り当て（<span id="km-target">親機</span>）</h2>
+      <table id="km"><thead><tr><th>動作</th><th>ゲームパッド</th><th>キーボード</th></tr></thead><tbody></tbody></table>
+    </section>
+  </main>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
 </html>

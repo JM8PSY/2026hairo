@@ -1,7 +1,7 @@
 # 実機なしで回すテスト。Mac と Jetson の両方で通ること。
-.PHONY: test test-fw test-py test-docker test-setup clean
+.PHONY: test test-fw test-py test-web test-docker test-setup clean
 
-test: test-fw test-py
+test: test-fw test-py test-web
 
 test-fw:
 	$(MAKE) -C firmware/motor_esp32/test_host test
@@ -9,6 +9,10 @@ test-fw:
 test-py:
 	python3 -m unittest discover -s common -t common
 	python3 -m unittest discover -s parent/server -t parent/server
+
+# Web UI の入力変換（node があるときだけ。Jetson には node を入れていないのでスキップされる）
+test-web:
+	@if command -v node >/dev/null; then node --test web/tests/*.test.mjs; else echo "node が無いので Web UI のテストをスキップ"; fi
 
 # Ubuntu 24.04（apt の python3-aiohttp 入り）で make test を回す。Mac に aiohttp が無くても Web サーバーまでテストできる
 test-docker:

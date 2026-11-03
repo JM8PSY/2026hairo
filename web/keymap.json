@@ -1,0 +1,40 @@
+{
+  "_comment": "ゲームパッド（Standard Gamepad 配置）とキーボードの割り当て。Web UI に一覧表示される",
+  "deadzone": 0.1,
+  "lid_confirm_ms": 1000,
+  "gamepad": {
+    "estop": 8,
+    "toggle_target": 9,
+    "parent": {
+      "left": {"axis": 1, "invert": true, "label": "左スティック 上下"},
+      "right": {"axis": 3, "invert": true, "label": "右スティック 上下"},
+      "sub_front": {"plus": 12, "minus": 13, "label": "十字キー 上 / 下"},
+      "sub_rear": {"plus": 4, "minus": 6, "label": "LB / LT"},
+      "lid": {"plus": 3, "minus": 0, "label": "Y（開）/ A（閉：1秒長押し）"},
+      "reel": {"plus": 7, "minus": 5, "label": "RT（巻取）/ RB（繰出）"}
+    },
+    "child": {
+      "left": {"axis": 1, "invert": true, "label": "左スティック 上下"},
+      "right": {"axis": 3, "invert": true, "label": "右スティック 上下"},
+      "brush": {"plus": 7, "minus": 6, "label": "RT（正転）/ LT（逆転）"}
+    }
+  },
+  "keyboard": {
+    "estop": "Space",
+    "toggle_target": "Tab",
+    "speed": 0.4,
+    "parent": {
+      "left": {"plus": "KeyW", "minus": "KeyS", "label": "W / S"},
+      "right": {"plus": "KeyI", "minus": "KeyK", "label": "I / K"},
+      "sub_front": {"plus": "KeyE", "minus": "KeyD", "label": "E / D"},
+      "sub_rear": {"plus": "KeyR", "minus": "KeyF", "label": "R / F"},
+      "lid": {"plus": "KeyO", "minus": "KeyL", "label": "O（開）/ L（閉：1秒長押し）"},
+      "reel": {"plus": "KeyU", "minus": "KeyJ", "label": "U（巻取）/ J（繰出）"}
+    },
+    "child": {
+      "left": {"plus": "KeyW", "minus": "KeyS", "label": "W / S"},
+      "right": {"plus": "KeyI", "minus": "KeyK", "label": "I / K"},
+      "brush": {"plus": "KeyU", "minus": "KeyJ", "label": "U / J"}
+    }
+  }
+}

@@ -16,6 +16,7 @@ import argparse
 import asyncio
 import itertools
 import json
+import logging
 import socket
 import sys
 import time
@@ -251,6 +252,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.port:
         cfg.setdefault("http", {})["port"] = args.port
     http = cfg.get("http", {})
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     web.run_app(build_app(cfg), host=http.get("host", "0.0.0.0"), port=http.get("port", 8080))
     return 0
 

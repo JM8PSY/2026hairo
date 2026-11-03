@@ -12,12 +12,13 @@
 - [x] 親機⇔子機 UDP プロトコル（`common/childlink`）：シーケンス番号・古いパケット破棄・子機側ウォッチドッグ
 - [x] `child/control`：UDP 受信 → motorlink（子機プロセス）＋ダミー子機
 - [x] 親機 Web サーバー（aiohttp）：操縦権1つ・ハートビート・E-Stop・全機停止条件（§5）
-- [ ] Web UI（素の JS）：ゲームパッド・非常停止ボタン・状態表示
+- [x] Web UI（素の JS）：ゲームパッド・非常停止ボタン・状態表示
 - [ ] 設定ファイル（IP・ポート・キー割り当て・タイムアウト）
 
 ## Jetson につないでから
 
 - [ ] `sudo ./tools/setup_jetson.sh` を実機で実行、`make test`
+- [ ] Chrome＋ゲームパッドで Web UI を操作確認（シミュレータ相手でよい）：ARM・ニュートラル待ち・タブ切替/ゲームパッド抜去での停止・ふた長押し
 - [ ] ESP32 のシリアル番号を udev ルールに設定、ファーム書き込み（モーター電源 OFF で）
 - [ ] `tools/motor_test.py` で1モーターずつ確認（**ユーザー立ち会い**）
 - [ ] YD-LiDAR ドライバ（Jazzy）ビルド、`/scan` 確認
