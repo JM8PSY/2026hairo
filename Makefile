@@ -8,6 +8,7 @@ test-fw:
 
 test-py:
 	python3 -m unittest discover -s common -t common
+	python3 -m unittest discover -s parent/server -t parent/server
 
 # tools/setup_jetson.sh を arm64 の Ubuntu 24.04 コンテナで実行する（Docker が必要、数分かかる）
 test-setup:
