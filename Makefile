@@ -1,5 +1,5 @@
 # 実機なしで回すテスト。Mac と Jetson の両方で通ること。
-.PHONY: test test-fw test-py test-setup clean
+.PHONY: test test-fw test-py test-docker test-setup clean
 
 test: test-fw test-py
 
@@ -9,6 +9,12 @@ test-fw:
 test-py:
 	python3 -m unittest discover -s common -t common
 	python3 -m unittest discover -s parent/server -t parent/server
+
+# Ubuntu 24.04（apt の python3-aiohttp 入り）で make test を回す。Mac に aiohttp が無くても Web サーバーまでテストできる
+test-docker:
+	docker build -q -t hairo-test -f tools/docker/test.Dockerfile tools/docker >/dev/null
+	docker run --rm -v "$(CURDIR)":/src:ro hairo-test bash -c \
+	  'cp -r /src /repo && cd /repo && make clean >/dev/null && make test'
 
 # tools/setup_jetson.sh を arm64 の Ubuntu 24.04 コンテナで実行する（Docker が必要、数分かかる）
 test-setup:

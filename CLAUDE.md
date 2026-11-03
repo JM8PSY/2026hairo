@@ -350,6 +350,11 @@ sudo ./tools/setup_jetson.sh
 
 # ホストPC（Mac/Jetson）での単体テスト
 make test
+make test-docker   # Ubuntu 24.04 コンテナで全テスト（Mac に aiohttp が無くても Web サーバーまで）
+
+# 親機 Web サーバー（ESP32 シミュレータ相手に動かす例）
+firmware/motor_esp32/test_host/build/motor_sim parent --link /tmp/robot_mcu &
+parent/server/app.py --serial /tmp/robot_mcu --child 127.0.0.1:47100
 
 # Jetsonの負荷・温度確認
 sudo tegrastats

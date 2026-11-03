@@ -1,0 +1,7 @@
+{
+  "_comment": "親機の設定（CLAUDE.md §10：設定値はコードに直書きしない）。IP・ポートは未決定（§12）の仮の値",
+  "http": {"host": "0.0.0.0", "port": 8080},
+  "motor": {"serial": "/dev/robot_mcu"},
+  "child": {"host": "192.168.20.2", "port": 47100, "bind_port": 47101},
+  "control": {"hb_timeout": 0.3, "rate_hz": 50, "status_hz": 10}
+}
