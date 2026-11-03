@@ -3,6 +3,7 @@
 安全上の決まり（CLAUDE.md §5）：
 - 親機からの DRIVE が timeout（既定 0.3秒）途絶えたら ARM を解除する。再開は操作者の ARM 要求から。
 - ESTOP フラグが立っている間は ESP32 を ESTOP にし続け、ARM 要求も受け付けない。
+- DISARM フラグが立っている間は ARM を解除し、ARM 要求も受け付けない。
 - 親機の session が変わった直後（親機の再起動・子機の起動直後）は ARM/CLEAR カウンタを
   基準値として覚えるだけで実行しない（再接続しただけで動き出さないため）。
 """
@@ -73,12 +74,17 @@ class ChildController:
         if body.clear_req != self._clear_req:
             self._clear_req = body.clear_req
             self.link.clear()
+        if body.disarm:
+            if _phase_name(self.link.phase) != "disarmed":
+                self.link.disarm()
+                self.last_stop_reason = "parent_disarm"
+            self._arm_req = body.arm_req  # DISARM 中の ARM 要求は捨てる
         if body.arm_req != self._arm_req:
             self._arm_req = body.arm_req
             if not body.estop:
                 self.link.arm()
 
-        if not body.estop and _phase_name(self.link.phase) == "armed":
+        if not body.estop and not body.disarm and _phase_name(self.link.phase) == "armed":
             self.link.set_duties(list(body.duties))
         return True
 

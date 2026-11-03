@@ -44,8 +44,8 @@ class FakeLink:
         self.duties = list(d)
 
 
-def drive(session, seq, duties=(0, 0, 0), estop=False, arm=0, clear=0, t=0):
-    return cp.encode_drive(session, seq, t, cp.Drive(estop, arm, clear, tuple(duties)))
+def drive(session, seq, duties=(0, 0, 0), estop=False, arm=0, clear=0, t=0, disarm=False):
+    return cp.encode_drive(session, seq, t, cp.Drive(estop, arm, clear, tuple(duties), disarm))
 
 
 class ProtoTest(unittest.TestCase):
@@ -53,6 +53,9 @@ class ProtoTest(unittest.TestCase):
         hdr, d = cp.decode(drive(7, 42, (100, -5, 0), estop=True, arm=3, clear=250, t=99))
         self.assertEqual((hdr.type, hdr.session, hdr.seq, hdr.time_ms), (cp.T_DRIVE, 7, 42, 99))
         self.assertEqual(d, cp.Drive(True, 3, 250, (100, -5, 0)))
+        _, d = cp.decode(drive(7, 43, disarm=True))
+        self.assertTrue(d.disarm)
+        self.assertFalse(d.estop)
 
     def test_status_roundtrip(self):
         s = cp.Status(1, 2, 3, 4, 5, 1, 0, 0, "armed", True, (10, -10, 0))
@@ -124,6 +127,17 @@ class ChildControllerTest(unittest.TestCase):
         self.c.on_packet(drive(1, 6, arm=3, clear=1), 0.10)
         self.assertEqual(self.link.calls[-1], "arm")
 
+    def test_disarm_flag(self):
+        self.c.on_packet(drive(1, 1), 0.0)
+        self.c.on_packet(drive(1, 2, arm=1), 0.02)
+        self.c.on_packet(drive(1, 3, (500, 0, 0), arm=2, disarm=True), 0.04)
+        self.assertEqual(self.link.calls, ["arm", "disarm"])  # ARM 要求も捨てる
+        self.assertEqual(self.c.last_stop_reason, "parent_disarm")
+        self.c.on_packet(drive(1, 4, (500, 0, 0), arm=2), 0.06)  # フラグが下りただけでは ARM しない
+        self.assertEqual(self.link.phase, "disarmed")
+        self.c.on_packet(drive(1, 5, (0, 0, 0), arm=3), 0.08)
+        self.assertEqual(self.link.calls[-1], "arm")
+
     def test_wrong_motor_count_ignored(self):
         self.assertFalse(self.c.on_packet(drive(1, 1, (0, 0)), 0.0))
 
@@ -132,10 +146,14 @@ class ChildClientTest(unittest.TestCase):
     def test_rate_and_estop_zeroes(self):
         cl = ChildClient(3, rate_hz=50)
         cl.set_duties([100, 200, 300])
-        self.assertIsNotNone(cl.step(0.0))
-        self.assertIsNone(cl.step(0.01))
+        _, d = cp.decode(cl.step(0.0))
+        self.assertEqual((d.disarm, d.duties), (True, (0, 0, 0)))  # 起動時は DISARM
+        cl.request_arm()
+        _, d = cp.decode(cl.step(0.021))
+        self.assertEqual((d.disarm, d.duties), (False, (100, 200, 300)))
+        self.assertIsNone(cl.step(0.03))
         cl.set_estop(True)
-        _, d = cp.decode(cl.step(0.02))
+        _, d = cp.decode(cl.step(0.05))
         self.assertEqual((d.estop, d.duties), (True, (0, 0, 0)))
 
     def test_rtt_and_loss(self):

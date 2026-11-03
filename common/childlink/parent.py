@@ -23,6 +23,7 @@ class ChildClient:
         self.seq = 0
         self._duties = [0] * n_motors
         self._estop = False
+        self._disarm = True  # 起動時は DISARM（操縦者が ARM するまで）
         self._arm_req = 0
         self._clear_req = 0
         self._next_send = 0.0
@@ -50,7 +51,14 @@ class ChildClient:
         if on:
             self.stop()
 
+    def set_disarm(self, on: bool) -> None:
+        self._disarm = on
+        if on:
+            self.stop()
+
     def request_arm(self) -> None:
+        """DISARM を解いて ARM を要求する（操作者の明示操作でのみ呼ぶ）。"""
+        self._disarm = False
         self._arm_req = (self._arm_req + 1) & 0xFF
 
     def request_clear(self) -> None:
@@ -67,8 +75,9 @@ class ChildClient:
             return None
         self._next_send = max(self._next_send + self.period, now)
         self.seq += 1
+        idle = self._estop or self._disarm
         d = cp.Drive(self._estop, self._arm_req, self._clear_req,
-                     tuple([0] * self.n_motors if self._estop else self._duties))
+                     tuple([0] * self.n_motors if idle else self._duties), self._disarm)
         return cp.encode_drive(self.session, self.seq, self._ms(now), d)
 
     def on_packet(self, data: bytes, now: float) -> bool:

@@ -19,6 +19,7 @@ T_STATUS = 0x81  # 子機 → 親機
 
 # DRIVE flags
 F_ESTOP = 0x01
+F_DISARM = 0x02  # 立っている間、子機は ARM を解除し ARM 要求も捨てる（操縦者がいない時など）
 
 # 共通ヘッダ: magic(2s) version(B) type(B) session(I) seq(I) time_ms(I)
 _HDR = struct.Struct("<2sBBIII")
@@ -47,6 +48,7 @@ class Drive:
     arm_req: int
     clear_req: int
     duties: tuple[int, ...]
+    disarm: bool = False
 
 
 @dataclass(frozen=True)
@@ -73,7 +75,7 @@ def encode_drive(session: int, seq: int, time_ms: int, d: Drive) -> bytes:
     if n > MAX_MOTORS:
         raise ValueError("too many motors")
     return (_HDR.pack(MAGIC, VERSION, T_DRIVE, session, seq, time_ms & 0xFFFFFFFF)
-            + _DRIVE.pack(F_ESTOP if d.estop else 0, d.arm_req & 0xFF, d.clear_req & 0xFF, n)
+            + _DRIVE.pack((F_ESTOP if d.estop else 0) | (F_DISARM if d.disarm else 0), d.arm_req & 0xFF, d.clear_req & 0xFF, n)
             + struct.pack(f"<{n}h", *d.duties))
 
 
@@ -101,7 +103,8 @@ def decode(data: bytes) -> tuple[Header, Drive | Status]:
         if n > MAX_MOTORS or len(body) != _DRIVE.size + 2 * n:
             raise DecodeError("bad DRIVE length")
         duties = struct.unpack_from(f"<{n}h", body, _DRIVE.size)
-        return hdr, Drive(bool(flags & F_ESTOP), arm_req, clear_req, tuple(duties))
+        return hdr, Drive(bool(flags & F_ESTOP), arm_req, clear_req, tuple(duties),
+                         bool(flags & F_DISARM))
     if ptype == T_STATUS:
         if len(body) < _STATUS.size:
             raise DecodeError("short STATUS")

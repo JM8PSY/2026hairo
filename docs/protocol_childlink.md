@@ -14,6 +14,7 @@ UDP は落ちる・順番が入れ替わる前提。**どのパケットも単�
 - session が変わった直後（親機の再起動・子機の起動直後）は、カウンタを基準値として覚えるだけで **実行しない**。
 - 子機は DRIVE が 0.3 秒途絶えたら ARM を解除する。再開は操作者の ARM 要求（カウンタを進める）から。
 - ESTOP フラグ中は ESP32 を ESTOP にし続け、ARM 要求は捨てる。解除は CLEAR 要求。
+- DISARM フラグ中は ARM を解除し、ARM 要求も捨てる。親機は起動時・操縦者がいない間このフラグを立てる。
 
 ## パケット（リトルエンディアン）
 
@@ -21,7 +22,7 @@ UDP は落ちる・順番が入れ替わる前提。**どのパケットも単�
 
 | type | 向き | 本体 |
 |------|------|------|
-| 0x01 DRIVE | 親→子 | `flags(u8: bit0=ESTOP)` `arm_req(u8)` `clear_req(u8)` `n(u8)` `duty(i16)×n` |
+| 0x01 DRIVE | 親→子 | `flags(u8: bit0=ESTOP, bit1=DISARM)` `arm_req(u8)` `clear_req(u8)` `n(u8)` `duty(i16)×n` |
 | 0x81 STATUS | 子→親（20Hz） | `ack_session(u32)` `ack_seq(u32)` `ack_time_ms(u32)` `rx_count(u32)` `stale(u32)` `esp_state(u8)` `esp_reason(u8)` `esp_fault(u8)` `phase(u8)` `connected(u8)` `n(u8)` `out(i16)×n` |
 
 - `ack_*` は子機が最後に受け取った DRIVE。親機は `ack_time_ms` から往復時間を、`ack_seq` と `rx_count` の増え方からロス率を出す。
