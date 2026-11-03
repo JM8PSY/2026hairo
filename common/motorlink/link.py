@@ -75,6 +75,8 @@ class MotorLink:
     # ---- 接続 ----
 
     def open(self, timeout: float = 2.0) -> proto.Info:
+        if self._fd is not None:
+            raise LinkError(f"{self.port}: すでに開いています")
         fd = os.open(self.port, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
         try:
             self._configure(fd)

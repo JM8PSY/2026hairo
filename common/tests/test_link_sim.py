@@ -6,7 +6,7 @@ import time
 import unittest
 from pathlib import Path
 
-from motorlink import BoardMismatch, MotorLink, Phase, proto
+from motorlink import BoardMismatch, LinkError, MotorLink, Phase, proto
 
 SIM = Path(__file__).resolve().parents[2] / "firmware/motor_esp32/test_host/build/motor_sim"
 
@@ -49,6 +49,8 @@ class LinkSimTest(unittest.TestCase):
         port = self.start_sim("child")
         link, info = self.open_link(port)
         self.assertEqual((info.board_id, info.n_motors), (proto.BOARD_ID_CHILD, 3))
+        with self.assertRaises(LinkError):  # 二重 open は拒否
+            link.open()
         link.close()
         with self.assertRaises(BoardMismatch):
             MotorLink(port, proto.BOARD_ID_PARENT).open()
