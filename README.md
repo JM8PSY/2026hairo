@@ -24,3 +24,5 @@ firmware/motor_esp32/test_host/build/motor_sim child   # ESP32 シミュレー�
 - [docs/setup_jetson.md](docs/setup_jetson.md) — Jetson の環境構築
 - [docs/protocol_motor_esp32.md](docs/protocol_motor_esp32.md) — ホスト ⇔ ESP32 プロトコル
 - [docs/wiring_motor_esp32.md](docs/wiring_motor_esp32.md) — モーター駆動の配線
+- [docs/protocol_childlink.md](docs/protocol_childlink.md) — 親機 ⇔ 子機 UDP プロトコル
+- [docs/roadmap.md](docs/roadmap.md) — 開発の進め方
