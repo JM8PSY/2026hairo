@@ -23,6 +23,17 @@ make test                         # 単体テストが通ることを確認
 | ROS 2（任意） | realsense2_camera, rosbag2 mcap（入らなくても続行） |
 | その他 | PlatformIO（pipx）、dialout グループ、`parent/udev/*.rules` |
 
+## 常駐させる（systemd）
+
+```bash
+sudo ./tools/install_services.sh parent   # /etc/systemd/system/hairo-web.service を入れる（有効化はしない）
+sudo systemctl start hairo-web            # 手動で起動
+sudo systemctl enable hairo-web           # 起動時に自動で立ち上げる場合
+journalctl -u hairo-web -f                # ログ
+```
+
+子機（Raspberry Pi）では `sudo ./tools/install_services.sh child`（`hairo-child.service`）。
+
 ## まだ手作業が要るもの
 
 - **udev ルールのシリアル番号**：`parent/udev/99-robot.rules` の `CHANGE_ME_*` を実機の値に書き換える。

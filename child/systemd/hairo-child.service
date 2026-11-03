@@ -1,0 +1,18 @@
+# 子機の制御プロセス。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
+[Unit]
+Description=Hairo robot child control (UDP from parent -> ESP32)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=/usr/bin/python3 @REPO@/child/control/child_control.py --config @REPO@/child/config/child.json
+# ESP32 が未接続だと終了するので、つながるまで再起動を繰り返す
+Restart=always
+RestartSec=2
+Nice=-5
+
+[Install]
+WantedBy=multi-user.target

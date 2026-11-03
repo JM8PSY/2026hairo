@@ -13,7 +13,7 @@
 - [x] `child/control`：UDP 受信 → motorlink（子機プロセス）＋ダミー子機
 - [x] 親機 Web サーバー（aiohttp）：操縦権1つ・ハートビート・E-Stop・全機停止条件（§5）
 - [x] Web UI（素の JS）：ゲームパッド・非常停止ボタン・状態表示
-- [ ] 設定ファイル（IP・ポート・キー割り当て・タイムアウト）
+- [x] 設定ファイル（`parent/config/parent.json`・`child/config/child.json`・`web/keymap.json`）と systemd ユニット
 
 ## Jetson につないでから
 

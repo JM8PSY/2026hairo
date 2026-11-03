@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """子機の制御プロセス：親機からの UDP 指令を受けて ESP32 へ送り、状態を親機へ返す。
 
-  child/control/child_control.py --serial /dev/robot_mcu --port 47100
+  child/control/child_control.py [--config child/config/child.json] [--serial PATH] [--port N]
+
+コマンドライン引数は設定ファイルより優先する。
 """
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import select
 import socket
@@ -24,11 +27,21 @@ STATUS_PERIOD_S = 0.05  # 20Hz
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--serial", default="/dev/robot_mcu")
-    ap.add_argument("--bind", default="0.0.0.0")
-    ap.add_argument("--port", type=int, default=47100)
-    ap.add_argument("--timeout", type=float, default=0.3, help="親機からの指令が途絶えたら停止するまでの秒数")
+    root = Path(__file__).resolve().parents[2]
+    ap.add_argument("--config", type=Path, default=root / "child/config/child.json")
+    ap.add_argument("--serial")
+    ap.add_argument("--bind")
+    ap.add_argument("--port", type=int)
+    ap.add_argument("--timeout", type=float, help="親機からの指令が途絶えたら停止するまでの秒数")
     args = ap.parse_args(argv)
+    with open(args.config, encoding="utf-8") as f:
+        cfg = json.load(f)
+    args.serial = args.serial or cfg.get("motor", {}).get("serial", "/dev/robot_mcu")
+    args.bind = args.bind or cfg.get("udp", {}).get("bind", "0.0.0.0")
+    if args.port is None:
+        args.port = cfg.get("udp", {}).get("port", 47100)
+    if args.timeout is None:
+        args.timeout = cfg.get("control", {}).get("parent_timeout", 0.3)
 
     link = MotorLink(args.serial, proto.BOARD_ID_CHILD)
     try:

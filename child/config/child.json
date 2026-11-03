@@ -1,0 +1,6 @@
+{
+  "_comment": "子機の設定（CLAUDE.md §10）。IP・ポートは未決定（§12）の仮の値",
+  "motor": {"serial": "/dev/robot_mcu"},
+  "udp": {"bind": "0.0.0.0", "port": 47100},
+  "control": {"parent_timeout": 0.3}
+}

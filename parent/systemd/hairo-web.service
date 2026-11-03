@@ -1,0 +1,18 @@
+# 親機 Web サーバー。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
+[Unit]
+Description=Hairo robot parent web server (operator UI + control)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=/usr/bin/python3 @REPO@/parent/server/app.py --config @REPO@/parent/config/parent.json
+Restart=on-failure
+RestartSec=2
+# 制御ループの遅れを減らす
+Nice=-5
+
+[Install]
+WantedBy=multi-user.target
