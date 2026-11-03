@@ -1,0 +1,11 @@
+# 親機のシリアルデバイス名を固定する（CLAUDE.md §4, §7）
+# ESP32-DevKit と YD-LiDAR X4 Pro はどちらも USB-シリアル変換に CP210x を使うことがあり、
+# VID/PID だけでは区別できない。必ずシリアル番号で識別すること。
+# シリアル番号の調べ方: udevadm info -a -n /dev/ttyUSB0 | grep '{serial}'
+# CHANGE_ME を実機の値に書き換えたら `sudo ./tools/setup_jetson.sh --no-ros --no-pio` で再インストールする。
+
+# モーター駆動 ESP32 → /dev/robot_mcu
+SUBSYSTEM=="tty", ATTRS{serial}=="CHANGE_ME_ESP32_SERIAL", SYMLINK+="robot_mcu", MODE="0660", GROUP="dialout"
+
+# YD-LiDAR X4 Pro → /dev/ydlidar
+SUBSYSTEM=="tty", ATTRS{serial}=="CHANGE_ME_YDLIDAR_SERIAL", SYMLINK+="ydlidar", MODE="0660", GROUP="dialout"

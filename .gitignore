@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# C++ / ホストテスト
+build/
+*.o
+
+# PlatformIO
+.pio/
+
+# ROS 2 colcon
+parent/ros2_ws/build/
+parent/ros2_ws/install/
+parent/ros2_ws/log/
+
+# rosbag・マップ（大きいので必要なものだけ明示的に追加する）
+*.db3
+*.mcap
+
+# OS / エディタ
+.DS_Store
+.vscode/
