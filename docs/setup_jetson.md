@@ -42,9 +42,18 @@ journalctl -u hairo-web -f                # ログ
 
   ```bash
   ./tools/build_ydlidar.sh
-  source parent/ros2_ws/install/setup.bash
-  ros2 run ydlidar_ros2_driver ydlidar_ros2_driver_node --ros-args --params-file parent/config/ydlidar_x4_pro.yaml
   ```
+
+- **2D SLAM**（YD-LiDAR + `slam_toolbox`）：
+
+  ```bash
+  cd parent/ros2_ws
+  colcon build --packages-select bringup
+  source install/setup.bash
+  ros2 launch bringup lidar_slam.launch.py
+  ```
+
+  オドメトリの方式が未定のため、`odom → base_link` は固定（仮）で、スキャンマッチングだけで自己位置を求める。
 - **RealSense**：apt の `realsense2_camera` で D455 が認識されない場合は、librealsense を `-DFORCE_RSUSB_BACKEND=ON` でソースビルドする。
 
 ## 検証
