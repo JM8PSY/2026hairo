@@ -24,6 +24,7 @@
 - [x] YD-LiDAR ドライバ（Jazzy）ビルド、`/scan` 確認
 - [x] Web UI：マップ（`/map`）、センサーと状態（`/status`）、ROS ゲートウェイ
 - [ ] LiDAR を手で動かして地図が正しく広がるか確認
+- [ ] Meta Quest 3 の実機で `/vr` を確認
 - [ ] RealSense D455 認識確認、SLAM（slam_toolbox）
 - [x] Insta360 X4 の出力形式確認 → 配信方式決定（MJPEG パススルー）
 - [x] Insta360 の配信をブラウザで確認（遅延はユーザーが目視で OK）

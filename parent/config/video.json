@@ -1,6 +1,8 @@
 {
   "_comment": "映像サーバーの設定。Insta360 はシリアル番号が同じ（0001）なので USB ポートの位置で指定する",
   "http": {"host": "0.0.0.0", "port": 8081},
+  "tls": {"port": 8443, "cert": "parent/config/tls/cert.pem", "key": "parent/config/tls/key.pem"},
+  "control_ws": "ws://127.0.0.1:8080/ws",
   "width": 2880,
   "height": 1440,
   "default_fps": 15,

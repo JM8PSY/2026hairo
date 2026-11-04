@@ -30,3 +30,6 @@ parent/ros2_ws/src/ydlidar_ros2_driver/
 
 # 保存した地図
 parent/maps/
+
+# HTTPS の秘密鍵・証明書（tools/make_tls_cert.sh が作る）
+parent/config/tls/

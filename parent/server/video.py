@@ -7,6 +7,8 @@
   parent/server/video.py [--config parent/config/video.json] [--port PORT]
 
 - GET /ws?cam=1&fps=15 → WebSocket。プロトコルは docs/protocol_video.md
+- GET /vr → Meta Quest 用の VR ページ。WebXR は HTTPS が必要なので、証明書があれば HTTPS でも待ち受ける
+- POST /estop → 操縦サーバーへ非常停止を中継する（HTTPS のページから HTTP の操縦サーバーへは接続できないため）
 - 操縦サーバー（app.py）とは別プロセス。映像が固まっても制御と非常停止に影響しない
 - カメラは見ている人がいる間だけ開く。同じカメラを何人で見ても開くのは1回
 """
@@ -16,11 +18,12 @@ import argparse
 import asyncio
 import json
 import logging
+import ssl
 import sys
 import time
 from pathlib import Path
 
-from aiohttp import WSMsgType, web
+from aiohttp import ClientError, ClientSession, ClientTimeout, WSMsgType, web
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -196,14 +199,62 @@ def build_app(cfg: dict) -> web.Application:
             cam.release()
         return ws
 
+    async def vr_page(request: web.Request) -> web.FileResponse:
+        return web.FileResponse(ROOT / "web" / "vr.html")
+
+    async def estop(request: web.Request) -> web.Response:
+        url = cfg.get("control_ws", "ws://127.0.0.1:8080/ws")
+        try:
+            async with ClientSession(timeout=ClientTimeout(total=2.0)) as session:
+                async with session.ws_connect(url) as ws:
+                    await ws.send_json({"t": "estop"})
+                    # 閉じる前に操縦サーバーが処理できるよう、最初の応答を待つ
+                    await ws.receive(timeout=1.0)
+        except (ClientError, OSError, asyncio.TimeoutError) as e:
+            log.error("非常停止を中継できません: %s", e)
+            return web.json_response({"ok": False, "error": "操縦サーバーに接続できません"}, status=502)
+        return web.json_response({"ok": True})
+
     async def on_cleanup(app: web.Application) -> None:
         for cam in cams.values():
             await cam.close()
 
     app[CAMS] = cams
     app.router.add_get("/ws", ws_handler)
+    app.router.add_get("/vr", vr_page)
+    app.router.add_post("/estop", estop)
+    app.router.add_static("/static/", ROOT / "web", show_index=False)
     app.on_cleanup.append(on_cleanup)
     return app
+
+
+def tls_context(cfg: dict) -> ssl.SSLContext | None:
+    """証明書があれば HTTPS 用の設定を返す。無ければ HTTP だけで動く（VR は使えない）。"""
+    tls = cfg.get("tls")
+    if not tls:
+        return None
+    cert, key = ROOT / tls["cert"], ROOT / tls["key"]
+    if not (cert.exists() and key.exists()):
+        log.warning("証明書が無いので HTTPS を使いません（VR に必要。tools/make_tls_cert.sh で作れます）")
+        return None
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(cert, key)
+    return context
+
+
+async def serve(cfg: dict, port: int | None) -> None:
+    http = cfg.get("http", {})
+    host = http.get("host", "0.0.0.0")
+    runner = web.AppRunner(build_app(cfg), handle_signals=True)
+    await runner.setup()
+    try:
+        await web.TCPSite(runner, host, port or http.get("port", 8081)).start()
+        context = tls_context(cfg)
+        if context is not None:
+            await web.TCPSite(runner, host, cfg["tls"].get("port", 8443), ssl_context=context).start()
+        await asyncio.Event().wait()
+    finally:
+        await runner.cleanup()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -213,9 +264,11 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     with open(args.config, encoding="utf-8") as f:
         cfg = json.load(f)
-    http = cfg.get("http", {})
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    web.run_app(build_app(cfg), host=http.get("host", "0.0.0.0"), port=args.port or http.get("port", 8081))
+    try:
+        asyncio.run(serve(cfg, args.port))
+    except (KeyboardInterrupt, web.GracefulExit):
+        pass
     return 0
 
 

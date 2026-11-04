@@ -17,7 +17,8 @@ export function parseParams(search, defaults) {
 
 export function videoUrl(loc, params) {
   const scheme = loc.protocol === "https:" ? "wss" : "ws";
-  return `${scheme}://${loc.hostname}:${params.port}/ws?cam=${encodeURIComponent(params.cam)}&fps=${params.fps}`;
+  const host = params.port ? `${loc.hostname}:${params.port}` : loc.hostname;
+  return `${scheme}://${host}/ws?cam=${encodeURIComponent(params.cam)}&fps=${params.fps}`;
 }
 
 // 最後のフレームから一定時間過ぎたら「映像なし」（止まった映像を生きているように見せない）

@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 
 try:
-    from aiohttp import WSMsgType
+    from aiohttp import WSMsgType, web
     from aiohttp.test_utils import TestClient, TestServer
     import video as server
 except ImportError:  # aiohttp 無し
@@ -138,3 +138,41 @@ class VideoTest(unittest.IsolatedAsyncioTestCase):
         self.assertGreaterEqual(self.cam.starts, 2)
         self.assertFalse(ws.closed)
         await ws.close()
+
+    async def test_vr_page_and_scripts_are_served(self):
+        await self.start()
+        r = await self.client.get("/vr")
+        self.assertEqual(r.status, 200)
+        self.assertIn("VRで見る", await r.text())
+        self.assertEqual((await self.client.get("/static/vr.js")).status, 200)
+
+    async def test_estop_is_relayed_to_control_server(self):
+        received = []
+
+        async def control_ws(request):
+            ws = web.WebSocketResponse()
+            await ws.prepare(request)
+            await ws.send_json({"t": "hello"})
+            received.append(await ws.receive_json(timeout=2))
+            await ws.close()
+            return ws
+
+        control = web.Application()
+        control.router.add_get("/ws", control_ws)
+        control_client = TestClient(TestServer(control))
+        await control_client.start_server()
+        self.addAsyncCleanup(control_client.close)
+        await self.start(control_ws=str(control_client.make_url("/ws")))
+        r = await self.client.post("/estop")
+        self.assertEqual((r.status, await r.json()), (200, {"ok": True}))
+        self.assertEqual(received, [{"t": "estop"}])
+
+    async def test_estop_reports_failure_when_control_server_is_down(self):
+        await self.start(control_ws="ws://127.0.0.1:9/ws")
+        r = await self.client.post("/estop")
+        self.assertEqual(r.status, 502)
+        self.assertFalse((await r.json())["ok"])
+
+    async def test_tls_context_needs_certificate(self):
+        self.assertIsNone(server.tls_context({}))
+        self.assertIsNone(server.tls_context({"tls": {"cert": "no/such.pem", "key": "no/such.pem"}}))

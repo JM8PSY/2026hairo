@@ -1,0 +1,23 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会 -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VR 映像</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="video-page">
+  <header>
+    <select id="cam" aria-label="カメラ"></select>
+    <select id="fps" aria-label="フレームレート"></select>
+    <span id="rate" class="pill bad">映像なし</span>
+    <button id="enter" class="go" disabled>VRで見る</button>
+    <button id="estop" class="estop">非常停止</button>
+  </header>
+  <div id="notice" class="banner bad" hidden></div>
+  <div class="video-stage"><canvas id="view" class="map-canvas"></canvas></div>
+  <script type="module" src="/static/vr.js"></script>
+</body>
+</html>
