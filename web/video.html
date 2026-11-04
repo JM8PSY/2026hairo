@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会 -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>映像</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="video-page">
+  <header>
+    <select id="cam" aria-label="カメラ"></select>
+    <select id="fps" aria-label="フレームレート"></select>
+    <span id="rate" class="pill bad">映像なし</span>
+    <span id="control" class="pill bad">操縦サーバー未接続</span>
+    <button id="estop" class="estop">非常停止</button>
+  </header>
+  <div id="estop-banner" class="banner bad" hidden>非常停止中</div>
+  <div class="video-stage">
+    <canvas id="view"></canvas>
+    <div id="no-video" class="no-video">映像なし</div>
+  </div>
+  <script type="module" src="/static/video.js"></script>
+</body>
+</html>

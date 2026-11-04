@@ -7,6 +7,7 @@
   parent/server/app.py [--config parent/config/parent.json] [--serial PATH] [--child HOST:PORT]
 
 - GET /      → web/ 以下の静的ファイル（index.html）
+- GET /video → 映像ページ（映像そのものは別プロセスの video.py が配信する）
 - GET /ws    → WebSocket。JSON メッセージ（docs/protocol_web.md）
 - 50Hz で ControlCore.tick() → ESP32（motorlink）と子機（childlink/UDP）へ指令
 - 10Hz で全クライアントへ status を配る
@@ -227,7 +228,11 @@ def build_app(cfg: dict) -> web.Application:
         return web.FileResponse(ROOT / "web" / "index.html")
 
     app.router.add_get("/ws", ws_handler)
+    async def video_page(request: web.Request) -> web.FileResponse:
+        return web.FileResponse(ROOT / "web" / "video.html")
+
     app.router.add_get("/", index)
+    app.router.add_get("/video", video_page)
     app.router.add_static("/static/", ROOT / "web", show_index=False)
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)

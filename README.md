@@ -26,6 +26,7 @@ firmware/motor_esp32/test_host/build/motor_sim child   # ESP32 シミュレー�
 - [docs/wiring_motor_esp32.md](docs/wiring_motor_esp32.md) — モーター駆動の配線
 - [docs/protocol_childlink.md](docs/protocol_childlink.md) — 親機 ⇔ 子機 UDP プロトコル
 - [docs/protocol_web.md](docs/protocol_web.md) — ブラウザ ⇔ 親機 WebSocket
+- [docs/protocol_video.md](docs/protocol_video.md) — ブラウザ ⇔ 映像サーバー WebSocket
 - [docs/roadmap.md](docs/roadmap.md) — 開発の進め方
 
 ## ライセンス

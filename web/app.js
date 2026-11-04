@@ -220,6 +220,9 @@ function bind() {
   };
   $("disarm").onclick = () => send({ t: "disarm" });
   $("clear").onclick = () => send({ t: "clear" });
+  for (const cam of ["1", "2"]) {
+    $(`open-cam${cam}`).onclick = () => window.open(`/video?cam=${cam}`, `hairo-cam${cam}`, "popup,width=1280,height=720");
+  }
   $("t-parent").onclick = () => { if (st.target !== "parent") toggleTarget(); };
   $("t-child").onclick = () => { if (st.target !== "child") toggleTarget(); };
 

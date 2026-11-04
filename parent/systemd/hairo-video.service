@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# 親機 映像サーバー。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
+[Unit]
+Description=Hairo robot parent video server (MJPEG passthrough)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=/usr/bin/python3 @REPO@/parent/server/video.py --config @REPO@/parent/config/video.json
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
