@@ -21,6 +21,6 @@
 - [ ] Chrome＋ゲームパッドで Web UI を操作確認（シミュレータ相手でよい）：ARM・ニュートラル待ち・タブ切替/ゲームパッド抜去での停止・ふた長押し
 - [ ] ESP32 のシリアル番号を udev ルールに設定、ファーム書き込み（モーター電源 OFF で）
 - [ ] `tools/motor_test.py` で1モーターずつ確認（**ユーザー立ち会い**）
-- [ ] YD-LiDAR ドライバ（Jazzy）ビルド、`/scan` 確認
+- [x] YD-LiDAR ドライバ（Jazzy）ビルド、`/scan` 確認
 - [ ] RealSense D455 認識確認、SLAM（slam_toolbox）
 - [ ] Insta360 X4 の出力形式確認 → 配信方式決定

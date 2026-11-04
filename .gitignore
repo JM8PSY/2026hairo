@@ -23,3 +23,7 @@ parent/ros2_ws/log/
 # OS / エディタ
 .DS_Store
 .vscode/
+
+# YD-LiDAR（tools/build_ydlidar.sh が取得・ビルドする）
+parent/ros2_ws/third_party/
+parent/ros2_ws/src/ydlidar_ros2_driver/
