@@ -36,7 +36,7 @@ journalctl -u hairo-web -f                # ログ
 
 ## まだ手作業が要るもの
 
-- **udev ルールのシリアル番号**：`parent/udev/99-robot.rules` の `CHANGE_ME_*` を実機の値に書き換える。
+- **udev ルールのシリアル番号**：`parent/udev/99-robot.rules` の `CHANGE_ME_*` を実機の値に書き換える（YD-LiDAR はシリアル番号が 0001 で識別できないため、USB ポートの位置で設定済み。挿すポートを変えたら書き換える）。
 - **電源モード**：`sudo nvpmodel -q` で確認し、MAXN 系に設定してから `sudo jetson_clocks`。
 - **YD-LiDAR**：`YDLidar-SDK` と `ydlidar_ros2_driver` はソースからビルドする（Jazzy 対応版の確認が必要）。手順が決まったらここに追記する。
 - **RealSense**：apt の `realsense2_camera` で D455 が認識されない場合は、librealsense を `-DFORCE_RSUSB_BACKEND=ON` でソースビルドする。
