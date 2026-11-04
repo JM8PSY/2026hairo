@@ -24,4 +24,4 @@
 - [x] YD-LiDAR ドライバ（Jazzy）ビルド、`/scan` 確認
 - [ ] RealSense D455 認識確認、SLAM（slam_toolbox）
 - [x] Insta360 X4 の出力形式確認 → 配信方式決定（MJPEG パススルー）
-- [ ] Insta360 の配信をブラウザで確認（遅延）
+- [x] Insta360 の配信をブラウザで確認（遅延はユーザーが目視で OK）
