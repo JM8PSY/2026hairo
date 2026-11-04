@@ -3,9 +3,8 @@
 
 // 映像ページ：映像サーバー（video.py）から JPEG を受けて描画する。docs/protocol_video.md
 // 操縦はできないが、非常停止だけはどのページからでも送れる（CLAUDE.md §5）。
+import { $, attachControl, setPill } from "./common.js";
 import { RateMeter, isStale, parseParams, videoUrl } from "./video_core.js";
-
-const $ = (id) => document.getElementById(id);
 
 const params = parseParams(location.search, { cam: "1", fps: 15, port: "8081" });
 const canvas = $("view");
@@ -13,13 +12,6 @@ const ctx = canvas.getContext("2d");
 const meter = new RateMeter();
 let videoWs = null;
 let lastFrame = null;
-let controlWs = null;
-let flashUntil = 0;
-
-function setPill(el, text, cls) {
-  el.textContent = text;
-  el.className = `pill ${cls || ""}`;
-}
 
 // ---- 映像 ----
 
@@ -96,35 +88,8 @@ function updateVideoState() {
   }
 }
 
-// ---- 非常停止（操縦サーバーへ） ----
-
-function connectControl() {
-  const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
-  controlWs = ws;
-  ws.onopen = () => setPill($("control"), "操縦サーバー接続中", "ok");
-  ws.onclose = () => {
-    setPill($("control"), "操縦サーバー未接続", "bad");
-    setTimeout(connectControl, 1000);
-  };
-  ws.onmessage = (ev) => {
-    const m = JSON.parse(ev.data);
-    if (m.t === "status") $("estop-banner").hidden = !m.core?.estop && performance.now() >= flashUntil;
-  };
-}
-
-function estop() {
-  if (controlWs?.readyState === WebSocket.OPEN) {
-    controlWs.send('{"t":"estop"}');
-    return;
-  }
-  flashUntil = performance.now() + 3000;
-  $("estop-banner").textContent = "操縦サーバーに未接続のため、非常停止を送れません";
-  $("estop-banner").hidden = false;
-}
-
 // ---- 起動 ----
 
-$("estop").onclick = estop;
 $("fps").onchange = (e) => {
   if (videoWs?.readyState === WebSocket.OPEN) videoWs.send(JSON.stringify({ t: "fps", fps: Number(e.target.value) }));
 };
@@ -134,6 +99,6 @@ $("cam").onchange = (e) => {
   location.reload();
 };
 connectVideo();
-connectControl();
+attachControl({ button: $("estop"), pill: $("control"), banner: $("estop-banner") });
 setInterval(updateVideoState, 200);
 updateVideoState();

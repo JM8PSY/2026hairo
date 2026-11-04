@@ -95,3 +95,8 @@ body.video-page { display: flex; flex-direction: column; height: 100vh; backgrou
   background: #000; color: var(--bad); font-size: 40px; font-weight: 700;
 }
 .no-video[hidden] { display: none; }
+
+/* マップ・状態ページ */
+.video-stage canvas.map-canvas { object-fit: fill; touch-action: none; cursor: grab; }
+.result { font-size: 13px; color: var(--ok); margin: 0; overflow-wrap: anywhere; }
+.result.bad { color: var(--bad); }

@@ -1,0 +1,8 @@
+{
+  "_comment": "ゲートウェイの設定。lidar_default_on は起動時の LiDAR の既定状態（CLAUDE.md §7）",
+  "http": {"host": "0.0.0.0", "port": 8082},
+  "map_hz": 1,
+  "scan_hz": 5,
+  "map_dir": "parent/maps",
+  "lidar_default_on": true
+}

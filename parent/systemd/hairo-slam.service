@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# YD-LiDAR + slam_toolbox。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
+[Unit]
+Description=Hairo robot LiDAR SLAM
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=/bin/bash -c 'source @REPO@/parent/ros2_ws/install/setup.bash && exec ros2 launch bringup lidar_slam.launch.py'
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

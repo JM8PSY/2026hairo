@@ -41,6 +41,12 @@ class AppTest(unittest.IsolatedAsyncioTestCase):
         self.sim.stdin.close()
         self.sim.stdout.close()
 
+    async def test_pages_are_served(self):
+        for path, marker in (("/", "操縦"), ("/video", "カメラ"), ("/map", "マップ"), ("/status", "センサー")):
+            r = await self.client.get(path)
+            self.assertEqual(r.status, 200, path)
+            self.assertIn(marker, await r.text(), path)
+
     async def connect(self):
         ws = await self.client.ws_connect("/ws")
         hello = await ws.receive_json()

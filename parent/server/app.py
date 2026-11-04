@@ -7,12 +7,13 @@
   parent/server/app.py [--config parent/config/parent.json] [--serial PATH] [--child HOST:PORT]
 
 - GET /      → web/ 以下の静的ファイル（index.html）
-- GET /video → 映像ページ（映像そのものは別プロセスの video.py が配信する）
+- GET /video, /map, /status → 映像・マップ・センサーと状態のページ
+  （中身は別プロセスの video.py と gateway.py が配信する。ROS が落ちても操縦に影響しない）
 - GET /ws    → WebSocket。JSON メッセージ（docs/protocol_web.md）
 - 50Hz で ControlCore.tick() → ESP32（motorlink）と子機（childlink/UDP）へ指令
 - 10Hz で全クライアントへ status を配る
 
-ESP32 や子機が見つからなくても起動する（つながり次第使う）。ROS 2 との連携は後で足す。
+ESP32 や子機が見つからなくても起動する（つながり次第使う）。
 """
 from __future__ import annotations
 
@@ -224,15 +225,16 @@ def build_app(cfg: dict) -> web.Application:
                 pass
         parent.close()
 
-    async def index(request: web.Request) -> web.FileResponse:
-        return web.FileResponse(ROOT / "web" / "index.html")
+    def page(name: str):
+        async def handler(request: web.Request) -> web.FileResponse:
+            return web.FileResponse(ROOT / "web" / name)
+        return handler
 
     app.router.add_get("/ws", ws_handler)
-    async def video_page(request: web.Request) -> web.FileResponse:
-        return web.FileResponse(ROOT / "web" / "video.html")
-
-    app.router.add_get("/", index)
-    app.router.add_get("/video", video_page)
+    app.router.add_get("/", page("index.html"))
+    app.router.add_get("/video", page("video.html"))
+    app.router.add_get("/map", page("map.html"))
+    app.router.add_get("/status", page("status.html"))
     app.router.add_static("/static/", ROOT / "web", show_index=False)
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)

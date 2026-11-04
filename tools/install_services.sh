@@ -7,7 +7,7 @@
 set -euo pipefail
 ROLE="${1:-}"
 case "$ROLE" in
-  parent) UNITS=(parent/systemd/hairo-web.service parent/systemd/hairo-video.service) ;;
+  parent) UNITS=(parent/systemd/hairo-web.service parent/systemd/hairo-video.service parent/systemd/hairo-gateway.service parent/systemd/hairo-slam.service) ;;
   child)  UNITS=(child/systemd/hairo-child.service) ;;
   *) echo "usage: sudo $0 parent|child" >&2; exit 2 ;;
 esac

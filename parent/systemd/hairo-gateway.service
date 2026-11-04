@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# 親機 ROS ゲートウェイ。tools/install_services.sh が @USER@ / @REPO@ を置き換えて /etc/systemd/system に入れる
+[Unit]
+Description=Hairo robot ROS gateway (map, pose, sensor switches)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=/bin/bash -c 'source /opt/ros/jazzy/setup.bash && exec python3 @REPO@/parent/server/gateway.py --config @REPO@/parent/config/gateway.json'
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

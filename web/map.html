@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会 -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>マップ</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="video-page">
+  <header>
+    <h1>マップ</h1>
+    <span id="slam" class="pill bad">ROS 未接続</span>
+    <span id="control" class="pill bad">操縦サーバー未接続</span>
+    <button id="fit">全体表示</button>
+    <button id="save">地図を保存</button>
+    <button id="reset">地図をリセット</button>
+    <span id="result" class="result"></span>
+    <button id="estop" class="estop">非常停止</button>
+  </header>
+  <div id="estop-banner" class="banner bad" hidden>非常停止中</div>
+  <div id="notice" class="banner bad" hidden></div>
+  <div class="video-stage"><canvas id="map" class="map-canvas"></canvas></div>
+  <script type="module" src="/static/map.js"></script>
+</body>
+</html>

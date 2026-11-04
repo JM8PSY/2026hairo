@@ -1,0 +1,64 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 旭川工業高等専門学校 最先端テクノロジー同好会 -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>センサーと状態</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>センサーと状態</h1>
+    <span id="control" class="pill bad">操縦サーバー未接続</span>
+    <button id="estop" class="estop">非常停止</button>
+  </header>
+  <div id="estop-banner" class="banner bad" hidden>非常停止中</div>
+  <main>
+    <section class="panel">
+      <h2>センサー</h2>
+      <dl class="kv">
+        <dt>LiDAR</dt><dd><span id="lidar-state" class="pill">—</span></dd>
+        <dt>SLAM</dt><dd><span id="slam-state" class="pill">—</span></dd>
+        <dt>D455</dt><dd><span class="pill">未対応</span></dd>
+      </dl>
+      <div class="row">
+        <button id="lidar-on" class="go">LiDAR ON</button>
+        <button id="lidar-off">LiDAR OFF</button>
+      </div>
+      <p id="lidar-error" class="result bad"></p>
+    </section>
+    <section class="panel">
+      <h2>Jetson</h2>
+      <dl class="kv">
+        <dt>温度</dt><dd id="temp">—</dd>
+        <dt>CPU</dt><dd id="cpu">—</dd>
+        <dt>メモリ</dt><dd id="mem">—</dd>
+      </dl>
+      <h2>操縦</h2>
+      <dl class="kv">
+        <dt>状態</dt><dd id="core-state">—</dd>
+        <dt>停止理由</dt><dd id="stop-reason">—</dd>
+      </dl>
+    </section>
+    <section class="panel">
+      <h2>親機 <span id="p-conn" class="pill bad">—</span></h2>
+      <dl class="kv">
+        <dt>ESP32</dt><dd id="p-state">—</dd>
+        <dt>ふた</dt><dd id="p-lid">—</dd>
+      </dl>
+      <div id="p-outs" class="outs"></div>
+    </section>
+    <section class="panel">
+      <h2>子機 <span id="c-conn" class="pill bad">—</span></h2>
+      <dl class="kv">
+        <dt>ESP32</dt><dd id="c-state">—</dd>
+        <dt>Wi-Fi</dt><dd id="c-link">—</dd>
+      </dl>
+      <div id="c-outs" class="outs"></div>
+    </section>
+  </main>
+  <script type="module" src="/static/status.js"></script>
+</body>
+</html>

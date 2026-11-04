@@ -4,6 +4,7 @@
 // 操縦 Web UI。docs/protocol_web.md の WebSocket プロトコルで親機と話す。
 // 安全（CLAUDE.md §5）：操縦者は 50Hz で cmd を送り続ける。タブ非表示・フォーカス喪失・
 // ゲームパッド切断のときは ok=false を送り、サーバーが全機停止する。再開は ARM ボタンから。
+import { $, renderOuts, setPill } from "./common.js";
 import {
   CHILD_AXES, EdgeDetector, LidConfirm, PARENT_AXES, readGamepad, readKeyboard, zeros,
 } from "./input.js";
@@ -20,8 +21,6 @@ const STOP_REASONS = {
   released: "操縦権を返した", operator_disarm: "停止ボタン", estop: "非常停止", cleared: "非常停止を解除",
   hidden: "タブが非表示", blur: "ウィンドウのフォーカス喪失", gamepad_disconnected: "ゲームパッド切断",
 };
-
-const $ = (id) => document.getElementById(id);
 
 const st = {
   ws: null,
@@ -121,32 +120,11 @@ function toggleTarget() {
 
 // ---- 表示 ----
 
-function setPill(el, text, cls) {
-  el.textContent = text;
-  el.className = `pill ${cls || ""}`;
-}
-
 let flashText = null;
 let flashUntil = 0;
 function flash(text) {
   flashText = text;
   flashUntil = performance.now() + 3000;
-}
-
-function renderOuts(el, names, outs, cmds) {
-  if (el.children.length !== names.length) {
-    el.innerHTML = names.map((n) =>
-      `<div class="out"><span>${n}</span><span class="track"><span class="fill"></span></span><span class="val"></span></div>`).join("");
-  }
-  names.forEach((_, i) => {
-    const v = outs?.[i] ?? 0;
-    const row = el.children[i];
-    const fill = row.querySelector(".fill");
-    const pct = Math.min(50, Math.abs(v) / 20);
-    fill.style.left = v >= 0 ? "50%" : `${50 - pct}%`;
-    fill.style.width = `${pct}%`;
-    row.querySelector(".val").textContent = `${(v / 10).toFixed(0)}%` + (cmds && cmds[i] !== v ? "*" : "");
-  });
 }
 
 function render() {
@@ -220,9 +198,11 @@ function bind() {
   };
   $("disarm").onclick = () => send({ t: "disarm" });
   $("clear").onclick = () => send({ t: "clear" });
-  for (const cam of ["1", "2"]) {
-    $(`open-cam${cam}`).onclick = () => window.open(`/video?cam=${cam}`, `hairo-cam${cam}`, "popup,width=1280,height=720");
-  }
+  const openWindow = (path, name) => window.open(path, `hairo-${name}`, "popup,width=1280,height=720");
+  $("open-cam1").onclick = () => openWindow("/video?cam=1", "cam1");
+  $("open-cam2").onclick = () => openWindow("/video?cam=2", "cam2");
+  $("open-map").onclick = () => openWindow("/map", "map");
+  $("open-status").onclick = () => openWindow("/status", "status");
   $("t-parent").onclick = () => { if (st.target !== "parent") toggleTarget(); };
   $("t-child").onclick = () => { if (st.target !== "child") toggleTarget(); };
 
